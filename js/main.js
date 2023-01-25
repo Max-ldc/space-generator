@@ -51,6 +51,17 @@ function moveComete(x,direction){   // on récupère la comète + la direction
     }
 }
 
+function putSpaceship(x){
+    let addShip = document.createElement("img");
+    addShip.src = x.img;
+    addShip.style.left = x.posX+"px";
+    addShip.style.top = x.posY+"px";
+    addShip.style.width = x.width;
+    addShip.className = "vaisseau";
+
+    document.body.appendChild(addShip); // ajout au DOM
+}
+
 /********* ITEMS *********/
 
 class Item{       // constructor pour 1 item
@@ -76,9 +87,10 @@ let Sat2 = new Item("./img/sat2.png", randomPosX(), randomPosY(), randomSize(70,
 let Sat3 = new Item("./img/sat3.png", randomPosX(), randomPosY(), randomSize(70,120), "object");
 let Comete = new Item("./img/comete.png", "0px", (innerHeight-100)+"px", "90px", "comete", "topRight");
 let Comete2 = new Item("./img/comete2.png", (innerWidth-100)+"px", "0px", "90px", "comete", "bottomLeft");
+let Vaisseau = new Item("./img/vaisseau.png", ((innerWidth/2)-50), (innerHeight-200), "100px", "vaisseau");
 
 
-let items = [Planet1 , Planet2, Planet3, Planet4, Sun, Moon, Asteroid, Sat1, Sat2, Sat3, Comete, Comete2];
+let items = [Planet1 , Planet2, Planet3, Planet4, Sun, Moon, Asteroid, Sat1, Sat2, Sat3, Comete, Comete2, Vaisseau];
 
 /********* CHOIX DES ITEMS *********/
 
@@ -89,13 +101,14 @@ function majInterface(askedType){
         (e) => {
             e.remove();
         }
-    )
-
+        )
+        
     if (askedType == ""){
         var itemsFiltrés = items;
     }else{
         var itemsFiltrés = items.filter(
             (item,i) => {
+                putSpaceship(Vaisseau);
                 return item.type == askedType;
             }
         );
@@ -103,23 +116,58 @@ function majInterface(askedType){
 
     itemsFiltrés.forEach(        // construction de chaque item
     (itemFiltré,i) => {
-        let addItem = document.createElement("img");
-        addItem.src = itemFiltré.img;
-        addItem.style.left = itemFiltré.posX;
-        addItem.style.top = itemFiltré.posY;
-        addItem.style.width = itemFiltré.width;
-        
-        
-        if (itemFiltré.type == "object"){     // rotation si c'est un object
-            addItem.className="rotation";
-        }
-        document.body.appendChild(addItem); // ajout au DOM
+        if (itemFiltré.type=="vaisseau"){
+            putSpaceship(Vaisseau);
 
-        if (itemFiltré.type == "comete"){         // mouvement si c'est une comète
-            moveComete(addItem,itemFiltré.dir);   // appel mouvement de comète en fonction de sa direction
+        }else{
+
+            let addItem = document.createElement("img");
+            addItem.src = itemFiltré.img;
+            addItem.style.left = itemFiltré.posX;
+            addItem.style.top = itemFiltré.posY;
+            addItem.style.width = itemFiltré.width;
+            
+            
+            if (itemFiltré.type == "object"){     // rotation si c'est un object
+                addItem.className="rotation";
+            }
+            document.body.appendChild(addItem); // ajout au DOM
+    
+            if (itemFiltré.type == "comete"){         // mouvement si c'est une comète
+                moveComete(addItem,itemFiltré.dir);   // appel mouvement de comète en fonction de sa direction
+            }
         }
     }
 )
 }
 
 majInterface("");
+
+// MOUVEMENT DU VAISSEAU :
+
+let vaisseau = document.querySelector(".vaisseau");
+let posVaisseauX = Vaisseau.posX;
+let posVaisseauY = Vaisseau.posY;
+
+onkeydown = (e) => {
+    if (e.key == "ArrowRight"){
+        posVaisseauX+=10;
+        vaisseau.style.transform="rotate(90deg)";
+        vaisseau.style.left=(posVaisseauX)+"px";
+    }
+    if (e.key == "ArrowLeft"){
+        posVaisseauX-=10;
+        vaisseau.style.transform="rotate(-90deg)";
+        vaisseau.style.left=(posVaisseauX)+"px";
+    }
+    if (e.key == "ArrowUp"){
+        posVaisseauY-=10;
+        vaisseau.style.transform="rotate(0deg)";
+        vaisseau.style.top=(posVaisseauY)+"px";
+    }
+    if (e.key == "ArrowDown"){
+        posVaisseauY+=10;
+        vaisseau.style.transform="rotate(180deg)";
+        vaisseau.style.top=(posVaisseauY)+"px";
+    }
+}
