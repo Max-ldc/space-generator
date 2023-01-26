@@ -148,6 +148,7 @@ majInterface("");
 let vaisseau = document.querySelector(".vaisseau");
 let posVaisseauX = Vaisseau.posX;
 let posVaisseauY = Vaisseau.posY;
+let sensVaisseau = "top"; // Pour tester si le vaisseau est vers la gauche, la droite, le haut ou le bas
 
 onkeydown = (e) => {
     if (e.key == "ArrowRight"){
@@ -155,23 +156,111 @@ onkeydown = (e) => {
         if (posVaisseauX>(innerWidth-89))(posVaisseauX=innerWidth-89); // bloquer à droite
         vaisseau.style.transform="rotate(90deg)";
         vaisseau.style.left=(posVaisseauX)+"px";
+        sensVaisseau="right"; // le vaisseau est tourné vers la droite
     }
     if (e.key == "ArrowLeft"){
         posVaisseauX-=10;
         if (posVaisseauX<-10)(posVaisseauX=-10); // bloquer à gauche
         vaisseau.style.transform="rotate(-90deg)";
         vaisseau.style.left=(posVaisseauX)+"px";
+        sensVaisseau="left"; // le vaisseau est tourné vers la droite
     }
     if (e.key == "ArrowUp"){
         posVaisseauY-=10;
         if (posVaisseauY<0)(posVaisseauY=0); // bloquer en haut
         vaisseau.style.transform="rotate(0deg)";
         vaisseau.style.top=(posVaisseauY)+"px";
+        sensVaisseau="top"; // le vaisseau est tourné vers le haut
     }
     if (e.key == "ArrowDown"){
         posVaisseauY+=10;
         if (posVaisseauY>innerHeight-89){posVaisseauY=innerHeight-89}; // bloquer en bas
         vaisseau.style.transform="rotate(180deg)";
         vaisseau.style.top=(posVaisseauY)+"px";
+        sensVaisseau="down"; // le vaisseau est tourné vers le bas
+    }
+    if (e.key == " "){
+        createLaser();
     }
 }
+
+
+// LASER
+
+let posXLaser=0;
+let posYLaser=0;
+
+function createLaser(){
+    let laser = document.createElement("div");
+    switch(sensVaisseau){
+        case ("top"):
+            posXLaser = (posVaisseauX+49);
+            posYLaser = (posVaisseauY-45);
+            laser.className = "laserVertical";
+            laser.style.left = posXLaser+"px";
+            laser.style.top = posYLaser+"px";
+            break;
+
+        case ("down"):
+            posXLaser = (posVaisseauX+49);
+            posYLaser = (posVaisseauY+90);
+            laser.className = "laserVertical";
+            laser.style.left = posXLaser+"px";
+            laser.style.top = posYLaser+"px";
+            break;
+
+        case ("right"):
+            posXLaser = (posVaisseauX+92);
+            posYLaser = (posVaisseauY+45);
+            laser.className = "laserHorizontal";
+            laser.style.left = posXLaser+"px";
+            laser.style.top = posYLaser+"px";
+            break;
+
+        case ("left"):
+            posXLaser = (posVaisseauX-38);
+            posYLaser = (posVaisseauY+45);
+            laser.className = "laserHorizontal";
+            laser.style.left = posXLaser+"px";
+            laser.style.top = posYLaser+"px";
+            
+            break;
+    }
+
+    let laserDir = sensVaisseau; // on fixe le sens vaisseau pour fixer la direction d'1 laser
+
+    document.body.appendChild(laser); // On ajoute le laser au DOM
+
+    var evolutionLaser = setInterval(majLaser,80,laser); // Mouvement du laser
+
+    function majLaser(laser){   // MAJ DE LA POS LASER
+    
+        switch (laserDir){          // en fonction de sa direction
+            case "top":                     // vers le haut
+                posYLaser-=10;
+                laser.style.top = posYLaser+"px";
+                break;
+    
+            case "down":                    // vers le bas
+                posYLaser+=10;
+                laser.style.top = posYLaser+"px";
+                break;
+
+            case "right":                   // vers la droite
+                posXLaser+=20;
+                laser.style.left = posXLaser+"px";
+                break;
+
+            case "left":                    // vers la gauche
+                posXLaser-=20;
+                laser.style.left = posXLaser+"px";
+                break;
+        }
+        // suppression du laser quand il sort de la fenêtre :
+        if(posYLaser>innerHeight+100 || posYLaser<0 || posXLaser<0 || posXLaser>innerWidth+100) {
+            laser.remove();
+            clearInterval(evolutionLaser);
+        }
+    }
+}
+

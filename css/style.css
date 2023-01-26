@@ -35,3 +35,19 @@ footer{
 .rotation {
     animation: rotation 20s linear infinite;
 }
+
+.laserVertical{
+    width:6px;
+    margin-left:-3px;
+    height:40px;
+    background:cyan;
+    position:absolute;
+}
+
+.laserHorizontal{
+    width:40px;
+    margin-top:-3px;
+    height:6px;
+    background:cyan;
+    position:absolute;
+}
