@@ -223,12 +223,11 @@ function createLaser(){
             laser.className = "laserHorizontal";
             laser.style.left = posXLaser+"px";
             laser.style.top = posYLaser+"px";
-            
             break;
     }
 
-    let laserDir = sensVaisseau; // on fixe le sens vaisseau pour fixer la direction d'1 laser
-
+    let laserDir = sensVaisseau;
+    
     document.body.appendChild(laser); // On ajoute le laser au DOM
 
     var evolutionLaser = setInterval(majLaser,80,laser); // Mouvement du laser
