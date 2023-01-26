@@ -152,21 +152,25 @@ let posVaisseauY = Vaisseau.posY;
 onkeydown = (e) => {
     if (e.key == "ArrowRight"){
         posVaisseauX+=10;
+        if (posVaisseauX>(innerWidth-89))(posVaisseauX=innerWidth-89); // bloquer à droite
         vaisseau.style.transform="rotate(90deg)";
         vaisseau.style.left=(posVaisseauX)+"px";
     }
     if (e.key == "ArrowLeft"){
         posVaisseauX-=10;
+        if (posVaisseauX<-10)(posVaisseauX=-10); // bloquer à gauche
         vaisseau.style.transform="rotate(-90deg)";
         vaisseau.style.left=(posVaisseauX)+"px";
     }
     if (e.key == "ArrowUp"){
         posVaisseauY-=10;
+        if (posVaisseauY<0)(posVaisseauY=0); // bloquer en haut
         vaisseau.style.transform="rotate(0deg)";
         vaisseau.style.top=(posVaisseauY)+"px";
     }
     if (e.key == "ArrowDown"){
         posVaisseauY+=10;
+        if (posVaisseauY>innerHeight-89){posVaisseauY=innerHeight-89}; // bloquer en bas
         vaisseau.style.transform="rotate(180deg)";
         vaisseau.style.top=(posVaisseauY)+"px";
     }
