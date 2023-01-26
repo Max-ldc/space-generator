@@ -51,7 +51,7 @@ function moveComete(x,direction){   // on récupère la comète + la direction
     }
 }
 
-function putSpaceship(x){
+function putSpaceship(x){           // Placement vaisseau départ
     let addShip = document.createElement("img");
     addShip.src = x.img;
     addShip.style.left = x.posX+"px";
@@ -92,11 +92,11 @@ let Vaisseau = new Item("./img/vaisseau.png", ((innerWidth/2)-50), (innerHeight-
 
 let items = [Planet1 , Planet2, Planet3, Planet4, Sun, Moon, Asteroid, Sat1, Sat2, Sat3, Comete, Comete2, Vaisseau];
 
-/********* CHOIX DES ITEMS *********/
+/********* FILTRE DES ITEMS *********/
 
 function majInterface(askedType){
 
-    let skyElements = document.querySelectorAll("img");
+    let skyElements = document.querySelectorAll("img");     // remove tout pour reconstruire
     skyElements.forEach(
         (e) => {
             e.remove();
@@ -118,7 +118,6 @@ function majInterface(askedType){
     (itemFiltré,i) => {
         if (itemFiltré.type=="vaisseau"){
             putSpaceship(Vaisseau);
-
         }else{
 
             let addItem = document.createElement("img");
@@ -138,7 +137,7 @@ function majInterface(askedType){
             }
         }
     }
-)
+    )
 }
 
 majInterface("");
@@ -184,15 +183,13 @@ onkeydown = (e) => {
     }
 }
 
-
 // LASER
 
-let posXLaser=0;
-let posYLaser=0;
-
 function createLaser(){
+    let posXLaser;          // initialisation des pos de chaque laser
+    let posYLaser;
     let laser = document.createElement("div");
-    switch(sensVaisseau){
+    switch(sensVaisseau){   // placement de départ en fonction de l'orientation du vaisseau
         case ("top"):
             posXLaser = (posVaisseauX+49);
             posYLaser = (posVaisseauY-45);
@@ -226,14 +223,14 @@ function createLaser(){
             break;
     }
 
-    let laserDir = sensVaisseau;
+    let laserDir = sensVaisseau; // On fixe le sens Vaisseau de départ pour la direction du laser sans qu'une flèche appuyée change
     
     document.body.appendChild(laser); // On ajoute le laser au DOM
 
     var evolutionLaser = setInterval(majLaser,80,laser); // Mouvement du laser
-
-    function majLaser(laser){   // MAJ DE LA POS LASER
     
+    function majLaser(laser){   // MAJ DE LA POS LASER
+        
         switch (laserDir){          // en fonction de sa direction
             case "top":                     // vers le haut
                 posYLaser-=10;
